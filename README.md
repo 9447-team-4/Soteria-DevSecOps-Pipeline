@@ -27,7 +27,7 @@ ArgoCD is monitoring the GitOps repo. So once the PR gets merged into main branc
 ArgoCD will update and deploy with new GitOps Repo’s manifest. By having `argocd app wait APPNAME` step in the pipeline, it won't go to the next step until the sync is done, and once the sync is done (aka. ArgoCD deployed on Kubernetes Dev Cluster) fuzzer runs toward that live server. 
 (Note that fuzzer needs (documentation, openAPI) && (Active server)  )
    
-## Inside Drone CI Pipeline
+## Pipeline code snippet of ArgoCD and fuzzer inside DroneCI (Draft)
 ```
 kind: pipeline
 type: docker
