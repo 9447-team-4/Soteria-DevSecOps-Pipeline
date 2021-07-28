@@ -1,6 +1,6 @@
-# OWASP-ZAP with Drone pipeline
+## OWASP-ZAP with Drone pipeline
 
-* ArgoCD Manifests
+# ArgoCD Manifests
 
 ArgoCD manifests for the pipeline
 
