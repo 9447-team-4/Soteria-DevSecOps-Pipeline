@@ -1,6 +1,6 @@
-## OWASP-ZAP with Drone pipeline
+# OWASP-ZAP with Drone pipeline
 
-# ArgoCD Manifests
+## ArgoCD Manifests
 
 ArgoCD manifests for the pipeline
 
@@ -31,7 +31,7 @@ Run the following command to obtain the initial admin password for ArgoCD.
 
 You may run `kubectl apply -n argocd -f ./path/to/your/app.yaml` to test deploying a sample app I provided in Soteria, else just create one in the ArgoCD UI.
 
-# About ArgoCD CLI
+## About ArgoCD CLI
 For convenience, the argocd CLI can be downloaded directly from the API server. This is useful so that the CLI used in the CI pipeline is always kept in-sync and uses argocd binary that is always compatible with the Argo CD API server.
 
 export ARGOCD_SERVER=argocd.mycompany.com
@@ -42,7 +42,7 @@ If automated synchronization is configured for the application, this step is unn
 The controller will automatically detect the new config (fast tracked using a webhook, or polled every 3 minutes), and automatically sync the new manifests.
 
 
-#  ArgoCD CLI to manually sync the App
+##  ArgoCD CLI to manually sync the App
 
 `ARGOCD_SERVER=$ARGOCD_SERVER argocd --grpc-web app sync $APP_NAME --force`
 
@@ -68,7 +68,7 @@ Patching the argocd-server to NodePort
 
 
 
-# Usage in Gitea
+## Usage in Gitea
 
 When you are trying to connect the Gitea's git repository to ArgoCD, you should use a repo url such as below.
 
@@ -76,7 +76,7 @@ When you are trying to connect the Gitea's git repository to ArgoCD, you should 
 
 e.g. `http://gitea-charts-http.default.svc.cluster.local:3000/haesun/Deployment.git`
 
-# Soteria's DevSecOps Pipeline
+## Soteria's DevSecOps Pipeline
 Our pipeline runs in Kubernetes.
 
 * Code pipeline (Source code): Opens PR for feature branch -> master branch
@@ -97,7 +97,7 @@ ArgoCD is monitoring the GitOps repo. So once the PR gets merged into main branc
 ArgoCD will update and deploy with new GitOps Repo’s manifest. By having `argocd app wait APPNAME` step in the pipeline, it won't go to the next step until the sync is done, and once the sync is done (aka. ArgoCD deployed on Kubernetes Dev Cluster) fuzzer runs toward that live server. 
 (Note that fuzzer needs (documentation, openAPI) && (Active server)  )
    
-# Inside Drone CI Pipeline
+## Inside Drone CI Pipeline
 ```
 kind: pipeline
 type: docker
