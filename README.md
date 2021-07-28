@@ -1,5 +1,11 @@
 # OWASP-ZAP with Drone pipeline
 
+## Walk through of the infrastructure
+The steps you should follow would be, read the `README.md` in the following order:
+1. pipeline-instruction
+2. gitea
+3. droneCI
+
 ## ArgoCD Manifests
 
 ArgoCD manifests for the pipeline
