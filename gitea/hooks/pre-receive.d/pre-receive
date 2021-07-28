@@ -1,0 +1,22 @@
+#!/bin/bash
+
+export GITGUARDIAN_API_KEY=12c19DfDb724381acbbf0dDb58C36A13fA514efD9cddFff9FC9Ff2201BDE0dAd6f5CA57
+
+# Commit sha with all zeros
+zero_commit="0000000000000000000000000000000000000000"
+
+while read -r oldrev newrev refname; do
+    # Check if a zero sha
+    if [ "${oldrev}" = "${zero_commit}" ]; then
+        # List everything reachable from newrev but not any heads
+        span="$(git for-each-ref --format='%(refname)' 'refs/heads/*' | sed 's/^/\^/') ${newrev}"
+    else
+        span="${oldrev}...${newrev}"
+    fi
+
+    ggshield scan commit-range "${span}" && continue
+
+    echo "ERROR: Your push was rejected because it contained a security incident"
+    echo "ERROR: Please contact your Git administrator if this was a false positive."
+    exit 1
+done

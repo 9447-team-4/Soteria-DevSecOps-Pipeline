@@ -1,0 +1,32 @@
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: gitea-reporter-configmap
+# data:
+#   GITEA_USERNAME: gitea_admin
+#   GITEA_HOST: 192.168.64.19
+#   GITEA_PORT: "30280"
+#   GITEA_REPO: testing_repo
+#   SONAR_URL: http://192.168.64.19:30281
+#   SONAR_LOGIN: admin
+# ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitea-reporter-configmap
+  namespace: drone
+data:
+  drone.conf: |
+    GITEA_TOKEN=9855be41edf2c09cef0bbd90496b4440a50d44b4
+    GITEA_USERNAME=gitea_admin
+    GITEA_HOST=192.168.64.19
+    GITEA_PORT=30280
+    GITEA_REPO=testing_repo
+    SONAR_URL=http://192.168.64.19:30281
+    SONAR_LOGIN=admin
+    SONAR_PASSWORD=password
+    SONAR_KEY=gitea_admin:testing_repo
+
+
+# S3_BUCKET_NAME=YOUR-S3-BUCKET-NAME
+# SNYK_TOKEN=YOUR-SNYK-TOKEN
