@@ -5,6 +5,8 @@ The steps you should follow would be, read the `README.md` in the following orde
 1. pipeline-instruction
 2. gitea
 3. droneCI
+4. argocd
+5. owasp-zap (draft)
 
 ## Soteria's DevSecOps Pipeline
 Our pipeline runs in Kubernetes.
