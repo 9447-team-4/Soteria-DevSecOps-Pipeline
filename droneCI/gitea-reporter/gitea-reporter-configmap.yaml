@@ -7,10 +7,10 @@ data:
   drone.conf: |
     GITEA_TOKEN=9855be41edf2c09cef0bbd90496b4440a50d44b4
     GITEA_USERNAME=gitea_admin
-    GITEA_HOST=MINIKUBE-IP
+    GITEA_HOST=192.168.64.20
     GITEA_PORT=30280
     GITEA_REPO=testing_repo
-    SONAR_URL=http://MINIKUBE-IP:30281
+    SONAR_URL=http://192.168.64.20:30281
     SONAR_LOGIN=admin
     SONAR_PASSWORD=password
     SONAR_KEY=gitea_admin:testing_repo
