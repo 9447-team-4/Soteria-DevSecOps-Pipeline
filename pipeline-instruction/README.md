@@ -28,3 +28,4 @@ A session is now active and outbound connections will be routed to the cluster. 
 To find the url,
 `minikube service --url droneserver -n drone`
 `minikube service --url gitea-charts-http -n gitea`
+
