@@ -21,6 +21,10 @@ spec:
         ports:
         - containerPort: 3000
         env:
+        # - name: DRONE_SECRET_PLUGIN_TOKEN
+        #   value: bea26a2221fd8090ea38720fc445eca6
+        # - name: DRONE_SECRET_PLUGIN_ENDPOINT
+        #   value: http://1.2.3.4:3000
         - name: DRONE_NAMESPACE_DEFAULT
           value: drone
         - name: DRONE_SERVICE_ACCOUNT_DEFAULT

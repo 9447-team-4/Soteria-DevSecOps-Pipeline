@@ -13,7 +13,7 @@ steps:
 - name: sonarqube
   image: aosapps/drone-sonar-plugin
   settings:
-    sonar_host: http://192.168.64.20:30281 
+    sonar_host: http://MINIKUBE_IP:30281 
     sonar_token: 26ed30174b7e1e78507838410903033db57b4ce1 # get this from sonarqube account->security->generate token
   
 - name: build
