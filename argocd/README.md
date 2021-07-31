@@ -14,6 +14,13 @@ Run the following command to install ArgoCD
 
 `kubectl apply -n argocd -f ./path/to/install.yaml`
 
+or
+
+```
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.0.5/manifests/install.yaml
+```
+
 (You can check the status by running `kubectl -n argocd get pods`. Controller looks after all the app yamls we passed in.)
 
 If something is running in port 8080
@@ -28,6 +35,8 @@ Run the following command to obtain the initial admin password for ArgoCD.
 
 `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d && echo`
 
+`chmod +x argocd_cli_auth.bash`
+`./argocd_cli_auth.bash`
 
 You may run `kubectl apply -n argocd -f ./path/to/your/app.yaml` to test deploying a sample app I provided in Soteria, else just create one in the ArgoCD UI.
 
