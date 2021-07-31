@@ -9,6 +9,13 @@ trigger:
     - pull_request
 
 steps:
+
+- name: sonarqube
+  image: aosapps/drone-sonar-plugin
+  settings:
+    sonar_host: http://192.168.64.20:30281 
+    sonar_token: 26ed30174b7e1e78507838410903033db57b4ce1 # get this from sonarqube account->security->generate token
+  
 - name: build
   image: docker:git
   volumes:
@@ -19,15 +26,38 @@ steps:
     - git clone --single-branch --branch $DRONE_TARGET_BRANCH $DRONE_REMOTE_URL
     - docker build -t base .
     - cd $DRONE_REPO_NAME && docker build -t target .
-    
+
 - name: report-gitea
-  image: soterias/gitea-reporter:test
+  image: soterias/gitea-reporter:latest
   pull: always
   volumes:
   - name: dockersock
     path: /var/run
   commands:
-    - gitea-reporter.py pr image-scan base target $DRONE_PULL_REQUEST
+    - export GITEA_REPO=$DRONE_REPO_NAME
+    # - gitea-reporter.py pr image-scan base target $DRONE_PULL_REQUEST # scan the vulnerable debian:latest
+  
+  # ---
+
+# - name: deployment-argocd
+#   image: payfit/argocd-cli # argoproj/argocd-cli
+#   commands:
+#     # - echo $ARGOCD-SECRET_KEY
+#     - echo y | argocd login argocd-server.argocd.svc.cluster.local:80 --username admin --password nldqhFrtnKadVHkO --grpc-web 
+#     - argocd version
+#     # - argocd app sync test-app
+#     - argocd app wait test-app
+#     # - 
+# # http://argocd-server.argocd.svc.cluster.local:80
+# # http://vuln.default.svc.cluster.local:90
+# - name: fuzzer
+#   image: soterias/zap-generator
+#   commands:
+#     - docker run generator -f 
+  # - Some commands to run the fuzzer towards the active target server
+  #   -> Successful: Pipeline will send webhook to Gitea to notify the developer that the dynamic testing was successful.
+  #   -> Failure: Breaks the pipeline
+
 
 services:
 - name: docker
