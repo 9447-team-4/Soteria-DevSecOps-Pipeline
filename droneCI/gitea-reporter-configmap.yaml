@@ -5,15 +5,21 @@ metadata:
   namespace: drone
 data:
   drone.conf: |
-    GITEA_TOKEN=205cfa30140a00387212db867ca3feb5663358a0
+    GITEA_TOKEN=38efa6e3a665527d57365aa50af41e27f025f1d4
     GITEA_USERNAME=gitea_admin
-    GITEA_HOST=MINIKUBE_IP
+    GITEA_HOST=192.168.64.21
     GITEA_PORT=30280
-    SNYK_TOKEN=e961e524-e720-48f3-a2b1-839c60e729bd
-    SONAR_URL=http://MINIKUBE_IP:30281
+    SNYK_TOKEN=ddd03aa3-a990-466d-9c09-e68d99ef8439
+    SONAR_URL=http://192.168.64.21:30281
     SONAR_LOGIN=admin
     SONAR_PASSWORD=password
-    SONAR_KEY=gitea_admin:feature2
-# S3_BUCKET_NAME=YOUR-S3-BUCKET-NAME
+    SONAR_TOKEN=3beffea101b3f910fff0f36569dc67e62aabb63b 
+    AWS_ACCESS_KEY_ID=AKIATOB2PDU6YH5YQWHC
+    AWS_SECRET_ACCESS_KEY=DRvISrncNneyRnKtA4gR/FBCmxE0FVR9vZ48pQqe
+    S3_BUCKET_NAME=soteriafuzzreport
+    S3_BUCKET_REGION=ap-southeast-2
 
+# get SONAR_TOKEN from sonarqube account->security->generate token
+
+# kubectl apply -f gitea-reporter-configmap.yaml -n drone
 # kubectl rollout restart deployment/drone-runner -n drone
