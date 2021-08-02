@@ -15,7 +15,7 @@ steps:
     sonar_host: http://192.168.64.21:30281
     sonar_token: 16aa2b797244ad5c850e644c4430354f02c2ec4b
 
-- name: report-gitea
+- name: sonarqube-report-gitea
   image: soterias/gitea-reporter:latest
   pull: always
   volumes:
@@ -25,7 +25,6 @@ steps:
   commands:
     - export GITEA_REPO=$DRONE_REPO_NAME
     - export SONAR_KEY=$DRONE_REPO_OWNER:$DRONE_REPO_NAME
-    - echo $SONAR_KEY
     - gitea-reporter.py pr static $DRONE_PULL_REQUEST
     
 - name: build
@@ -39,7 +38,7 @@ steps:
     - docker build -t base .
     - cd $DRONE_REPO_NAME && docker build -t target .
 
-- name: report-gitea
+- name: imagescan-report-gitea
   image: soterias/gitea-reporter:latest
   pull: always
   volumes:
@@ -58,7 +57,7 @@ steps:
     - argocd app sync vulnerable-openapi
     - argocd app wait vulnerable-openapi
     
-# # # http://argocd-server.argocd.svc.cluster.local:80
+# # # # http://argocd-server.argocd.svc.cluster.local:80
 
 - name: fuzzer-setup
   image: docker 
