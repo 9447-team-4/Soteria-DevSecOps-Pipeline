@@ -1,0 +1,115 @@
+---
+kind: pipeline
+type: kubernetes
+name: soteria-ci
+
+trigger:
+  event:
+    include:
+    - pull_request
+
+steps:
+- name: sonarqube
+  image: aosapps/drone-sonar-plugin
+  settings:
+    sonar_host: http://192.168.64.21:30281
+    sonar_token: 16aa2b797244ad5c850e644c4430354f02c2ec4b
+
+- name: report-gitea
+  image: soterias/gitea-reporter:latest
+  pull: always
+  volumes:
+  - name: dockersock
+    path: /var/run
+  # failure: ignore
+  commands:
+    - export GITEA_REPO=$DRONE_REPO_NAME
+    - export SONAR_KEY=$DRONE_REPO_OWNER:$DRONE_REPO_NAME
+    - echo $SONAR_KEY
+    - gitea-reporter.py pr static $DRONE_PULL_REQUEST
+    
+- name: build
+  image: docker:git
+  volumes:
+  - name: dockersock
+    path: /var/run
+  commands:
+    - sleep 5 # give docker enough time to start
+    - git clone --single-branch --branch $DRONE_TARGET_BRANCH $DRONE_REMOTE_URL
+    - docker build -t base .
+    - cd $DRONE_REPO_NAME && docker build -t target .
+
+- name: report-gitea
+  image: soterias/gitea-reporter:latest
+  pull: always
+  volumes:
+  - name: dockersock
+    path: /var/run
+  # failure: ignore
+  commands:
+    - export GITEA_REPO=$DRONE_REPO_NAME
+    - gitea-reporter.py pr image-scan base target $DRONE_PULL_REQUEST # scan the vulnerable debian:latest
+  
+- name: deployment-argocd
+  image: payfit/argocd-cli # argoproj/argocd-cli
+  commands:
+    - echo y | argocd login argocd-server.argocd.svc.cluster.local:80 --username admin --password YRLkmnuMWSJJjsNi --grpc-web 
+    - argocd version
+    - argocd app sync vulnerable-openapi
+    - argocd app wait vulnerable-openapi
+    
+# # # http://argocd-server.argocd.svc.cluster.local:80
+
+- name: fuzzer-setup
+  image: docker 
+  volumes:
+  - name: dockersock
+    path: /var/run
+  commands:
+    - docker run -v /drone/src/:/openapi/ soterias/owasp-generator:latest generate -f /openapi/vapi.yaml -u http://192.168.64.21:30000 -o /openapi/zap_openapi.json
+
+- name: fuzzer-execute
+  image: docker
+  volumes:
+  - name: dockersock
+    path: /var/run
+  failure: ignore
+  commands:
+    - docker run -v /drone/src/:/zap/wrk/ owasp/zap2docker-stable python3 zap-api-scan.py -t zap_openapi.json -f openapi -r report.html -J report.json
+  
+- name: fuzzer-report-gitea
+  image: docker 
+  volumes:
+  - name: dockersock
+    path: /var/run
+  commands:
+    - ls
+    - docker run --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env S3_BUCKET_NAME=$S3_BUCKET_NAME --env S3_BUCKET_REGION=$S3_BUCKET_REGION -v /drone/src/:/reports/ soterias/owasp-generator:latest upload -H /reports/report.html -J /reports/report.json
+
+- name: fuzzer-report-gitea2
+  image: soterias/gitea-reporter:latest
+  pull: always
+  volumes:
+  - name: dockersock
+    path: /var/run
+  commands:
+    - echo $DRONE_PULL_REQUEST 
+    - export GITEA_REPO=$DRONE_REPO_NAME
+    - gitea-reporter.py pr dynamic $DRONE_PULL_REQUEST 
+
+# http://vuln2.default.svc.cluster.local:8081 
+# http://192.168.64.21:30000 
+
+services:
+- name: docker
+  image: docker:dind
+  privileged: true
+  volumes:
+  - name: dockersock
+    path: /var/run
+
+volumes:
+- name: dockersock
+  temp: {}
+
+...
