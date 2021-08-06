@@ -11,6 +11,9 @@ The steps you should follow would be, read the `README.md` in the following orde
 ## Soteria's DevSecOps Pipeline
 Our pipeline runs in Kubernetes.
 
+<img width="1038" alt="Screen Shot 2021-08-06 at 2 25 34 pm" src="https://user-images.githubusercontent.com/58884456/128455912-78d02825-c47f-44bc-ba59-814093936b73.png">
+
+
 * Code pipeline (Source code): Opens PR for feature branch -> master branch
 Secret detection, static analysis and image scanning will run in the pipeline. If it passes all the tests, update and push image into the image registry. If fails, break the pipeline.
         
